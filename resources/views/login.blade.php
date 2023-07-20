@@ -1,7 +1,7 @@
 @extends('base')
 
 @section('content')
-<form action="" method="POST">
+<form action="{{route('app.login.post')}}" method="POST">
     @csrf
     <div class="formulario">
     <input class="input" type="email" placeholder="Email" name="email" >

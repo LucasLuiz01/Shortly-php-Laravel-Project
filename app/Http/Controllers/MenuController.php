@@ -11,14 +11,15 @@ use Illuminate\Support\Str;
 class MenuController extends Controller
 {
     public function index(){
-        $userId = Auth::id();
+        $userId = auth()->user()->id;
         $links = Link::where('user_id', $userId)->get()->toArray();
         return view('menu/menu',['links' => $links]);
     }
     public function shortUrl (Request $request) {
+        $this->middleware('auth:api');
         $url = $request->input('link');
         $shortUrl = Str::random(6);
-        $userId = Auth::id();
+        $userId = auth()->user()->id;
         $link = new Link();
         $link->url = $url;
         $link->shortUrl = $shortUrl; 

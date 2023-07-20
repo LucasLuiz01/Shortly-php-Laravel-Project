@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -49,9 +50,12 @@ class UserController extends Controller
         ];
         $request->validate($regras, $feedback);
         $credenciais = $request->only('email', 'password');
-        if (Auth::attempt($credenciais)) {
+        if  (auth()->attempt($credenciais)) {
             // Autenticação bem-sucedida
-            return redirect()->intended('/menu');
+            $user = auth()->user();
+            $token = auth()->attempt($credenciais);
+            Cookie::queue('token', $token, 1440);
+            return redirect()->route('menu');
         }
     
         // Autenticação falhou
@@ -68,6 +72,6 @@ class UserController extends Controller
     }
     public function logout() {
     Auth::logout();
-    return redirect()->route('menu');
+    return redirect()->route('api/menu');
     }
 }
